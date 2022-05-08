@@ -5,7 +5,7 @@ export const rocketApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: 'https://api.spacexdata.com/v3/' }),
     endpoints: (builder) => ({
         getAllData: builder.query({
-            query: () => `launches`,
+            query: ({rocket_name = '', launch_date_utc = '', launch_success='', start="", end="", upcoming=''}) => `launches?rocket_name=${rocket_name}&launch_date_utc=${launch_date_utc}&launch_success=${launch_success}&start=${start}&end=${end}&upcoming=${upcoming}`,
         }),
     }),
 })
