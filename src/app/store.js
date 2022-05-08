@@ -1,8 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import pageReducer from '../component/page/pageSlice';
-import {setupListeners} from "@reduxjs/toolkit/query";
-import {rocketApi} from '../component/page/pageAPI';
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "../features/counter/counterSlice";
+import pageReducer from "../component/page/pageSlice";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import { rocketApi } from "../component/page/pageAPI";
 
 export const store = configureStore({
   reducer: {
@@ -10,8 +10,8 @@ export const store = configureStore({
     page: pageReducer,
     [rocketApi.reducerPath]: rocketApi.reducer,
   },
-  middleware : (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(rocketApi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(rocketApi.middleware),
 });
 
-setupListeners(store.dispatch)
+setupListeners(store.dispatch);
