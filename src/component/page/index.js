@@ -54,8 +54,6 @@ export const Page = () => {
             startTime = moment().subtract(timeRange, 'years').startOf('year').format('YYYY-MM-DD')
             endTime = moment().subtract(timeRange, 'years').endOf('year').format('YYYY-MM-DD')
         }
-        console.log(startTime)
-        console.log(endTime)
         dispatch(setStart(startTime))
         dispatch(setEnd(endTime))
 
