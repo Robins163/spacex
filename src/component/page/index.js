@@ -53,6 +53,8 @@ export const Page = () => {
             startTime = moment().subtract(timeRange, 'years').startOf('year').format('YYYY-MM-DD')
             endTime = moment().subtract(timeRange, 'years').endOf('year').format('YYYY-MM-DD')
         }
+        console.log(startTime)
+        console.log(endTime)
         dispatch(setStart(startTime))
         dispatch(setEnd(endTime))
 
@@ -64,6 +66,7 @@ export const Page = () => {
         dispatch(setUpcoming(''))
         dispatch(setStart(''))
         dispatch(setEnd(''))
+        setTimeRange('')
         fetchData()
     }
 
@@ -88,7 +91,9 @@ export const Page = () => {
     }
 
     useEffect(() => {
-        calculateStartEndTime(timeRange)
+        if (timeRange) {
+            calculateStartEndTime(timeRange)
+        }
     }, [timeRange])
 
     const previousYearOption = (totalYears = 0) => {
@@ -98,7 +103,7 @@ export const Page = () => {
         const lastYear = currentYear - totalYears;
         while (currentYear > lastYear) {
             data.push(
-                <option value={yearDiff}>{currentYear}</option>
+                <option key={currentYear} value={yearDiff}>{currentYear}</option>
             )
             yearDiff++;
             currentYear--;

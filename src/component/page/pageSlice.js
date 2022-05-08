@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {useGetAllDataQuery} from "./pageAPI";
 import axios from "axios";
 
 const initialState = {
@@ -36,7 +35,30 @@ export const fetchRockets = createAsyncThunk(
             url += '/upcoming'
         }
 
-        const { data } = await instance.get(`${url}?rocket_name=${rocketName}&launch_success=${launchStatus}&start=${start}&end=${end}&upcoming=${upcoming}`);
+        const searchParams = {}
+
+        if (rocketName) {
+            searchParams['rocket_name'] = rocketName
+        }
+
+        if (launchStatus) {
+            searchParams['launch_success'] = launchStatus
+        }
+
+        if (start) {
+            searchParams['start'] = start
+        }
+
+        if (end) {
+            searchParams['end'] = end
+        }
+
+        if (upcoming) {
+            searchParams['upcoming'] = upcoming
+        }
+
+        const transformedToString = new URLSearchParams(searchParams)
+        const { data } = await instance.get(`${url}?${transformedToString.toString()}`);
         return data;
     }
 );
@@ -55,7 +77,7 @@ export const pageSlice = createSlice({
             state.upcoming = action.payload
         },
         setStart:(state,action)=> {
-            console.log(action.payload)
+            console.trace()
             state.start = action.payload
         },
         setEnd:(state,action)=> {
@@ -72,7 +94,6 @@ export const pageSlice = createSlice({
             })
             .addCase(fetchRockets.fulfilled, (state, action) => {
                 state.status = 'idle';
-                console.log(action)
                 state.data = action.payload;
             });
     },
