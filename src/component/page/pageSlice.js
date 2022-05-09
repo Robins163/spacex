@@ -13,7 +13,7 @@ const initialState = {
 
 export const fetchRockets = createAsyncThunk(
   "page/rockets",
-  async (params, { getState, requestId }) => {
+  async (params, { getState }) => {
     const state = getState();
     const { page } = state;
     const instance = axios.create({
@@ -30,23 +30,23 @@ export const fetchRockets = createAsyncThunk(
     const searchParams = {};
 
     if (rocketName) {
-      searchParams["rocket_name"] = rocketName;
+      searchParams.rocket_name = rocketName;
     }
 
     if (launchStatus) {
-      searchParams["launch_success"] = launchStatus;
+      searchParams.launch_success = launchStatus;
     }
 
     if (start) {
-      searchParams["start"] = start;
+      searchParams.start = start;
     }
 
     if (end) {
-      searchParams["end"] = end;
+      searchParams.end = end;
     }
 
     if (upcoming) {
-      searchParams["upcoming"] = upcoming;
+      searchParams.upcoming = upcoming;
     }
 
     const transformedToString = new URLSearchParams(searchParams);
@@ -83,7 +83,7 @@ export const pageSlice = createSlice({
       .addCase(fetchRockets.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchRockets.rejected, (state, config) => {
+      .addCase(fetchRockets.rejected, (state) => {
         state.status = "idle";
       })
       .addCase(fetchRockets.fulfilled, (state, action) => {

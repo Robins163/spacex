@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 import counterReducer from "../features/counter/counterSlice";
 import pageReducer from "../component/page/pageSlice";
-import { setupListeners } from "@reduxjs/toolkit/query";
 import { rocketApi } from "../component/page/pageAPI";
 
-export const store = configureStore({
+const store = configureStore({
   reducer: {
     counter: counterReducer,
     page: pageReducer,
@@ -15,3 +15,5 @@ export const store = configureStore({
 });
 
 setupListeners(store.dispatch);
+
+export default store;

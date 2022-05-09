@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { Col, Container, Row, Button, ButtonGroup } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchRockets,
-  selectRocketName,
-  setRocketName,
-  selectLaunchStatus,
-  setLaunchStatus,
-  selectUpcoming,
-  setUpcoming,
-  isFetching,
   getRockets,
-  setStart,
+  isFetching,
+  selectLaunchStatus,
+  selectRocketName,
+  selectUpcoming,
   setEnd,
+  setLaunchStatus,
+  setRocketName,
+  setStart,
+  setUpcoming,
 } from "./pageSlice";
 
 const initialYearDiff = 2;
 
-export const Page = () => {
+function Page() {
   const rocketName = useSelector(selectRocketName);
   const launchStatus = useSelector(selectLaunchStatus);
   const upcoming = useSelector(selectUpcoming);
@@ -36,11 +36,11 @@ export const Page = () => {
     fetchData();
   }, []);
 
-  const calculateStartEndTime = (timeRange = "") => {
+  const calculateStartEndTime = (range = "") => {
     let startTime = "";
     let endTime = "";
 
-    if (timeRange === "last_week") {
+    if (range === "last_week") {
       startTime = moment()
         .subtract(1, "weeks")
         .startOf("week")
@@ -49,7 +49,7 @@ export const Page = () => {
         .subtract(1, "weeks")
         .endOf("week")
         .format("YYYY-MM-DD");
-    } else if (timeRange === "last_month") {
+    } else if (range === "last_month") {
       startTime = moment()
         .subtract(1, "months")
         .startOf("month")
@@ -58,7 +58,7 @@ export const Page = () => {
         .subtract(1, "months")
         .endOf("month")
         .format("YYYY-MM-DD");
-    } else if (timeRange === "last_year") {
+    } else if (range === "last_year") {
       startTime = moment()
         .subtract(1, "years")
         .startOf("year")
@@ -67,13 +67,13 @@ export const Page = () => {
         .subtract(1, "years")
         .endOf("year")
         .format("YYYY-MM-DD");
-    } else if (!isNaN(+timeRange)) {
+    } else if (!Number.isNaN(+range)) {
       startTime = moment()
-        .subtract(timeRange, "years")
+        .subtract(range, "years")
         .startOf("year")
         .format("YYYY-MM-DD");
       endTime = moment()
-        .subtract(timeRange, "years")
+        .subtract(range, "years")
         .endOf("year")
         .format("YYYY-MM-DD");
     }
@@ -92,7 +92,7 @@ export const Page = () => {
   };
 
   const handleChange = (event) => {
-    let fn = console.log;
+    let fn;
     switch (event.target.name) {
       case "rocket_name":
         dispatch(setRocketName(event.target.value));
@@ -108,7 +108,9 @@ export const Page = () => {
         break;
       default:
     }
-    fn(event.target.value);
+    if (fn) {
+      fn(event.target.value);
+    }
   };
 
   useEffect(() => {
@@ -130,16 +132,16 @@ export const Page = () => {
           {currentYear}
         </option>
       );
-      yearDiff++;
-      currentYear--;
+      yearDiff += 1;
+      currentYear -= 1;
     }
     return data;
   };
 
   return (
     <Container>
-      <div className={"card p-2 my-3 mx-1"}>
-        <Row className={"gx-2"}>
+      <div className="card p-2 my-3 mx-1">
+        <Row className="gx-2">
           <Col>
             <input
               onChange={handleChange}
@@ -157,7 +159,7 @@ export const Page = () => {
               value={launchStatus}
               onChange={handleChange}
             >
-              <option value={""}>Launch Status</option>
+              <option value="">Launch Status</option>
               <option value="true">Success</option>
               <option value="false">Failed</option>
             </select>
@@ -169,7 +171,7 @@ export const Page = () => {
               onChange={handleChange}
               name="launch_time_range"
             >
-              <option value={""}>Time</option>
+              <option value="">Time</option>
               <option value="last_week">Last Week</option>
               <option value="last_month">Last Month</option>
               <option value="last_year">Last Year</option>
@@ -183,13 +185,13 @@ export const Page = () => {
               value={upcoming}
               onChange={handleChange}
             >
-              <option value={""}>Upcoming Status</option>
+              <option value="">Upcoming Status</option>
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
           </Col>
         </Row>
-        <Row className={"gx-3 py-2"}>
+        <Row className="gx-3 py-2">
           <Col>
             <ButtonGroup aria-label="Basic example">
               <Button variant="primary" onClick={fetchData}>
@@ -205,74 +207,75 @@ export const Page = () => {
       {fetching ? (
         <div>Loading...</div>
       ) : (
-        <div className={"card my-3 mx-1"}>
+        <div className="card my-3 mx-1">
           <div className="row gx-3">
-            {rockets.map((rocket, index) => {
-              return (
-                <div key={index} className="col-3 col-md-3 card p-3">
-                  <img
-                    className={"rounded img-fluid card-img-top"}
-                    src={
-                      rocket?.links?.mission_patch_small
-                        ? rocket?.links?.mission_patch_small
-                        : "https://via.placeholder.com/292x346"
-                    }
-                    alt={rocket.mission_name}
-                  />
-                  <div className={"mt-3"}>
-                    <h5 className={"card-title "}>
-                      Mission Name: {rocket.mission_name}
-                    </h5>
-                    <div className="card-body">
-                      <div className="card-text text-start">
-                        {" "}
-                        Rocket Name: {rocket.rocket.rocket_name}
+            {rockets.map((rocket) => (
+              <div
+                key={rocket.flight_number}
+                className="col-3 col-md-3 card p-3"
+              >
+                <img
+                  className="rounded img-fluid card-img-top"
+                  src={
+                    rocket?.links?.mission_patch_small
+                      ? rocket?.links?.mission_patch_small
+                      : "https://via.placeholder.com/292x346"
+                  }
+                  alt={rocket.mission_name}
+                />
+                <div className="mt-3">
+                  <h5 className="card-title">
+                    Mission Name: {rocket.mission_name}
+                  </h5>
+                  <div className="card-body">
+                    <div className="card-text text-start">
+                      {" "}
+                      Rocket Name: {rocket.rocket.rocket_name}
+                    </div>
+                    <div className="text-start">
+                      {" "}
+                      Date:{" "}
+                      {moment(rocket.launch_date_local).format("DD MMM YYYY")}
+                    </div>
+                    <div className="text-start">
+                      {" "}
+                      Time: {moment(rocket.launch_date_local).format("HH:mm")}
+                    </div>
+                    <div className="card-text">
+                      <div
+                        className={
+                          rocket.launch_success
+                            ? "alert alert-success"
+                            : "alert alert-danger"
+                        }
+                        role="alert"
+                      >
+                        {rocket.launch_success
+                          ? "Mission Success"
+                          : "Mission Failed"}
                       </div>
-                      <div className="text-start">
-                        {" "}
-                        Date:{" "}
-                        {moment(rocket.launch_date_local).format("DD MMM YYYY")}
-                      </div>
-                      <div className="text-start">
-                        {" "}
-                        Time: {moment(rocket.launch_date_local).format("HH:mm")}
-                      </div>
-                      <div className="card-text">
-                        <div
-                          className={
-                            "alert " +
-                            (rocket.launch_success
-                              ? " alert-success"
-                              : " alert-danger")
-                          }
-                          role="alert"
-                        >
-                          {rocket.launch_success
-                            ? "Mission Success"
-                            : "Mission Failed"}
-                        </div>
-                      </div>
-                      <div className="card-text">
-                        <div
-                          className={
-                            "alert " +
-                            (rocket.upcoming
-                              ? " alert-success"
-                              : " alert-danger")
-                          }
-                          role="alert"
-                        >
-                          {rocket.upcoming ? "Upcoming" : "Not Upcoming"}
-                        </div>
+                    </div>
+                    <div className="card-text">
+                      <div
+                        className={
+                          rocket.upcoming
+                            ? "alert  alert-success"
+                            : "alert  alert-danger"
+                        }
+                        role="alert"
+                      >
+                        {rocket.upcoming ? "Upcoming" : "Not Upcoming"}
                       </div>
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       )}
     </Container>
   );
-};
+}
+
+export default Page;

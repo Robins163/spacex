@@ -6,14 +6,14 @@ export const rocketApi = createApi({
   endpoints: (builder) => ({
     getAllData: builder.query({
       query: ({
-        rocket_name = "",
-        launch_date_utc = "",
-        launch_success = "",
+        rocketName = "",
+        launchDateUtc = "",
+        launchSuccess = "",
         start = "",
         end = "",
         upcoming = "",
       }) =>
-        `launches?rocket_name=${rocket_name}&launch_date_utc=${launch_date_utc}&launch_success=${launch_success}&start=${start}&end=${end}&upcoming=${upcoming}`,
+        `launches?rocket_name=${rocketName}&launch_date_utc=${launchDateUtc}&launch_success=${launchSuccess}&start=${start}&end=${end}&upcoming=${upcoming}`,
     }),
   }),
 });

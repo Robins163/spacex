@@ -1,6 +1,6 @@
 import counterReducer, {
-  increment,
   decrement,
+  increment,
   incrementByAmount,
 } from "./counterSlice";
 
